@@ -1,0 +1,83 @@
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f0f2f5;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .voicebot-container {
+    border-radius: 10px;
+    width: 400px;
+    height: 500px;
+    display: flex;
+    flex-direction: column;
+    background-color: #fff;
+    margin: 20px auto;
+    padding: 20px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .voicebot-header {
+    text-align: center;
+    margin-bottom: 10px;
+  }
+  
+  .voicebot-header h2 {
+    margin: 0;
+    color: #333;
+  }
+  
+  .voicebot-messages {
+    flex-grow: 1;
+    overflow-y: auto;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+  }
+  
+  .voicebot-message {
+    padding: 10px;
+    margin: 5px 0;
+    border-radius: 20px;
+    max-width: 80%;
+  }
+  
+  .voicebot-message.user {
+    background-color: #007bff;
+    color: white;
+    align-self: flex-end;
+  }
+  
+  .voicebot-message.bot {
+    background-color: #e1e1e1;
+    color: black;
+    align-self: flex-start;
+  }
+  
+  .voicebot-controls {
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+  }
+  
+  .voicebot-controls button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    background-color: #007bff;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .voicebot-controls button:hover {
+    background-color: #0056b3;
+  }
+  
+  .voicebot-controls button:disabled {
+    background-color: #a3c1e0;
+    cursor: not-allowed;
+  }
+  

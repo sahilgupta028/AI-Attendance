@@ -1,0 +1,27 @@
+{
+  "compilerOptions": {
+    "target": "ES2017",
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "jsx": "preserve",
+    "incremental": true,
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
+    "paths": {
+      "@/*": ["./src/*"]
+    }
+  },
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/app/page.tsx", "src/components/Home/DoubtForm.jsx", "src/app/(root)/student/login/page.jsx", "src/app/(root)/teacher/register/page.tsx", "src/app/(root)/teacher/login/page.jsx", "src/app/(root)/mark-attendance/[id]/page.jsx", "src/components/Teacher/MarkAttenadance.jsx", "src/components/Teacher/Buttons.jsx"],
+  "exclude": ["node_modules"]
+}
