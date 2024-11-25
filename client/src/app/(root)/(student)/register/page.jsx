@@ -3,23 +3,52 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import Banner from '@/components/Home/Banner';
-import { Toaster, toast } from 'react-hot-toast'; // Import Toaster and toast from react-hot-toast
+import { Toaster, toast } from 'react-hot-toast';
+import { verifyEmail } from '@/components/Verification/VerifyEmail';
 
 export default function Register() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [classGroup, setClassGroup] = useState('');
+  const [profilePhoto, setProfilePhoto] = useState(null); // State for profile photo
+
+  const handlePhotoChange = (e) => {
+    setProfilePhoto(e.target.files[0]);
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    const formData = new FormData();
+    formData.append('name', name);
+    formData.append('email', email);
+    formData.append('password', password);
+    formData.append('classGroup', classGroup);
+    if (profilePhoto) {
+      formData.append('profilePhoto', profilePhoto); // Append photo if selected
+    }
+
+    const reader = new FileReader();
+    reader.readAsDataURL(profilePhoto); // `photoFile` should be a File object
+    reader.onloadend = async () => {
+      const base64Image = reader.result;
+
+
+   const validity = await verifyEmail(email);
+
+    if(validity == "invalid"){
+      return toast.error("The email address you provided appears to be invalid. Please verify and try again.");
+    }
+
+
     try {
       const response = await fetch('/api/register-student', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, email, password, classGroup }),
+        body: JSON.stringify({ name, email, password, classGroup, photo: base64Image}),
       });
+
+      console.log({ name, email, password, classGroup, base64Image});
 
       const data = await response.json();
 
@@ -38,6 +67,7 @@ export default function Register() {
         position: 'top-center',
       });
     }
+  }
   };
 
   return (
@@ -57,8 +87,21 @@ export default function Register() {
         </div>
 
         <div className="flex items-center justify-center w-full md:w-1/2 bg-white p-8">
-          <form onSubmit={handleSubmit} className="space-y-6 w-full">
+          <form onSubmit={handleSubmit} className="space-y-6 w-full" encType="multipart/form-data">
             <h1 className="text-3xl font-bold text-center mb-6">Student Register</h1>
+
+
+            <div>
+              <label htmlFor="profilePhoto" className="block text-sm font-medium text-gray-700 mb-1">
+                Profile Photo
+              </label>
+              <input
+                type="file"
+                id="profilePhoto"
+                onChange={handlePhotoChange}
+                className="w-full p-3 border border-gray-300 rounded-lg"
+              />
+            </div>
 
             <div>
               <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
@@ -91,21 +134,6 @@ export default function Register() {
             </div>
 
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
-                Password
-              </label>
-              <input
-                type="password"
-                id="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500"
-                placeholder="Enter your password"
-              />
-            </div>
-
-            <div>
               <label htmlFor="classGroup" className="block text-sm font-medium text-gray-700 mb-1">
                 Class
               </label>
@@ -123,6 +151,23 @@ export default function Register() {
               </select>
             </div>
 
+            <div>
+              <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
+                Password
+              </label>
+              <input
+                type="password"
+                id="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500"
+                placeholder="Enter your password"
+              />
+            </div>
+
+            
+
             <button
               type="submit"
               className="w-full bg-yellow-500 text-white py-3 rounded-lg font-semibold hover:bg-yellow-600 transition duration-300"
@@ -132,7 +177,7 @@ export default function Register() {
           </form>
         </div>
       </div>
-      <Toaster /> {/* Toaster component to display toast notifications */}
+      <Toaster />
     </>
   );
 }

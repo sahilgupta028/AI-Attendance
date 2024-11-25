@@ -74,7 +74,7 @@ export default function Login() {
       })
       .then((data) => {
         if (data) {
-          console.log(data[0]._id);
+          console.log(data);
           toast.success("Face recognized");
           setIsCameraOpen(false);
 
@@ -101,7 +101,7 @@ export default function Login() {
 
   return (
     <>
-      <div className="flex flex-row-reverse min-h-screen bg-white mt-2">
+      <div className="flex flex-row-reverse min-h-screen bg-white">
         {/* Left Side - Image */}
         <div className="hidden md:flex md:w-1/2">
           <div className="relative w-full h-full">

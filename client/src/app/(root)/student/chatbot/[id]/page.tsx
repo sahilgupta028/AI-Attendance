@@ -1,7 +1,7 @@
 "use client";
 // pages/index.tsx
 import { useEffect, useState } from 'react';
-import toast from 'react-hot-toast';
+import toast, { ToastBar, Toaster } from 'react-hot-toast';
 
 export default function Chatbot({ params }: any) {
   const [query, setQuery] = useState('');
@@ -47,6 +47,7 @@ export default function Chatbot({ params }: any) {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-blue-50">
+      <Toaster />
       <div className="max-w-xl w-full p-6 bg-white rounded-xl shadow-lg space-y-4">
         <h1 className="text-3xl font-semibold text-center text-gray-800">Chat with Our Attendance Bot</h1>
         

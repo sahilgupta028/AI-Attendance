@@ -1,6 +1,7 @@
+// components/Navbar.js
 "use client";
 import Link from 'next/link';
-import { FiHome, FiUserCheck, FiClipboard, FiFileText, FiLogIn, FiLogOut } from 'react-icons/fi';
+import { FiHome, FiUserCheck, FiClipboard, FiLogIn, FiLogOut, FiMenu } from 'react-icons/fi';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 
@@ -10,74 +11,79 @@ export default function Navbar() {
   const router = useRouter();
 
   useEffect(() => {
-    // Load initial login status from localStorage
     const loggedInStatus = localStorage.getItem('isLoggedIn') === 'true';
     setIsLoggedIn(loggedInStatus);
-  }, [ isLoggedIn]);
+  }, [isLoggedIn]);
 
   const handleLoginLogin = () => {
     router.push('/login');
   };
 
   const handleLoginLogout = () => {
-    const newStatus = !isLoggedIn;
-    setIsLoggedIn(newStatus);
+    setIsLoggedIn(false);
     localStorage.setItem('isLoggedIn', "false");
     router.push('/');
   };
 
   return (
-    <nav className="bg-gradient-to-r from-orange-400 to-orange-600 text-white shadow-lg z-10">
+    <nav className="bg-gradient-to-r from-orange-400 to-orange-500 text-white shadow-lg w-full z-20">
       <div className="container mx-auto px-4 py-3 flex justify-between items-center">
         {/* Logo */}
-        <img src="/logo/logo.jpg" alt="logo" className="h-12 w-12 rounded-full" />
-        
-        {/* Mobile Menu Toggle */}
-        <div className="md:hidden">
-          <button
-            onClick={() => setIsOpen(!isOpen)}
-            className="text-white focus:outline-none"
-          >
-            <svg
-              className="w-6 h-6"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M4 6h16M4 12h16M4 18h16"
-              />
-            </svg>
-          </button>
+        <div className="flex items-center space-x-2">
+          <img src="/logo/logo.png" alt="logo" className="h-10 w-10 rounded-full shadow-md" />
+          <span className="text-2xl font-bold tracking-wide hidden md:block">Attendance Manager</span>
         </div>
 
+        {/* Mobile Menu Toggle */}
+        <button
+          onClick={() => setIsOpen(!isOpen)}
+          className="text-white focus:outline-none md:hidden"
+        >
+          <FiMenu className="w-6 h-6" />
+        </button>
+
         {/* Menu Links */}
-        <div className={`md:flex items-center space-x-8 ${isOpen ? "block" : "hidden"} md:block`}>
+        <div
+          className={`md:flex items-center md:space-x-8 space-y-4 md:space-y-0 bg-orange-500 md:bg-transparent absolute md:static top-16 left-0 w-full md:w-auto p-5 md:p-0 rounded-lg shadow-lg md:shadow-none transform transition-all duration-300 ease-in-out ${
+            isOpen ? "block z-50" : "hidden"
+          }`}
+        >
           <Link href="/">
-            <button className="flex items-center space-x-2 hover:text-gray-200 transition duration-300">
-              <FiHome className="text-xl" />
+            <button className="flex items-center space-x-2 px-4 py-2 rounded-lg hover:bg-orange-600 transition duration-300">
+              <FiHome className="text-lg" />
               <span>Home</span>
+            </button>
+          </Link>
+
+          <Link href="/about-us">
+            <button className="flex items-center space-x-2 px-4 py-2 rounded-lg hover:bg-orange-600 transition duration-300">
+              <FiUserCheck className="text-lg" />
+              <span>About Us</span>
+            </button>
+          </Link>
+
+          <Link href="/features">
+            <button className="flex items-center space-x-2 px-4 py-2 rounded-lg hover:bg-orange-600 transition duration-300">
+              <FiClipboard className="text-lg" />
+              <span>Features</span>
             </button>
           </Link>
 
           {/* Login/Logout Button */}
           <button
-            className="flex items-center space-x-2 hover:text-gray-200 transition duration-300"
+            onClick={isLoggedIn ? handleLoginLogout : handleLoginLogin}
+            className="flex items-center space-x-2 px-4 py-2 rounded-lg hover:bg-orange-600 transition duration-300"
           >
             {isLoggedIn ? (
-              <div onClick={handleLoginLogout} className='flex items-center justify-center gap-2'>
-                <FiLogOut className="text-xl" />
+              <>
+                <FiLogOut className="text-lg" />
                 <span>Logout</span>
-              </div>
+              </>
             ) : (
-              <span onClick={handleLoginLogin} className='flex items-center justify-center gap-2'>
-                <FiLogIn className="text-xl" />
+              <>
+                <FiLogIn className="text-lg" />
                 <span>Login</span>
-              </span>
+              </>
             )}
           </button>
         </div>

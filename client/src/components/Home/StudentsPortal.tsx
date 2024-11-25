@@ -8,7 +8,7 @@ export default function StudentPortal() {
     <div className="flex flex-col md:flex-row max-h-screen bg-white">
       {/* Left Section - Text */}
       <div className="flex flex-col justify-center items-start p-10 md:w-1/2 bg-white rounded-lg m-4 md:m-8 space-y-6">
-        <h1 className="text-5xl font-extrabold text-orange-700 mb-4">Student Portal</h1>
+        <h1 className="text-5xl font-extrabold text-black mb-4">Student Portal</h1>
         <p className="text-lg text-gray-700 mb-8">
           Access your account to manage your attendance, view reports, and stay updated.
         </p>

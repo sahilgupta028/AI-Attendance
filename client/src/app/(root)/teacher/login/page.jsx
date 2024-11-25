@@ -5,6 +5,7 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
+import toast, { Toaster } from 'react-hot-toast';
 
 export default function Login() {
   const [userId, setUserId] = useState('');
@@ -31,9 +32,11 @@ export default function Login() {
 
       if (response.ok) {
         console.log("Login successful:", data.teacher._id);
+        toast.success("Login successful");
         router.push(`/mark-attendance/${data.teacher._id}?classGroup=${data.teacher.classGroup}&subject=${data.teacher.subject}`);
       } else {
         setError(data.message);
+        toast.error("Login Failed");
       }
     } catch (err) {
       console.error("Login error:", err);
@@ -43,6 +46,7 @@ export default function Login() {
 
   return (
     <div className="flex flex-col-reverse md:flex-row min-h-screen bg-gray-50">
+      <Toaster />
       {/* Left Side - Image */}
       <div className="relative w-full md:w-1/2 h-64 md:h-auto">
         <Image

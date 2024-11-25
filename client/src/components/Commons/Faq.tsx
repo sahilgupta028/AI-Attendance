@@ -1,6 +1,7 @@
-"use client";
 // components/FAQ.js
+"use client";
 import { useState } from 'react';
+import { FiChevronDown, FiChevronUp } from 'react-icons/fi';
 
 export default function FAQ() {
   const faqs = [
@@ -28,31 +29,34 @@ export default function FAQ() {
 
   const [openIndex, setOpenIndex] = useState(null);
 
-  const toggleAnswer = (index) => {
+  const toggleAnswer = (index: any) => {
     setOpenIndex(openIndex === index ? null : index);
   };
 
   return (
-    <div className="bg-gray-100 py-16">
+    <div className="bg-gradient-to-r from-gray-100 to-gray-200 py-16">
       <div className="max-w-4xl mx-auto px-6">
-        <h2 className="text-4xl font-bold text-center text-gray-800 mb-8">Frequently Asked Questions</h2>
-        <div className="space-y-4">
+        <h2 className="text-4xl font-bold text-center text-gray-800 mb-10">Frequently Asked Questions</h2>
+        <div className="space-y-6">
           {faqs.map((faq, index) => (
-            <div key={index} className="bg-white rounded-lg shadow-lg overflow-hidden transition-all duration-300 ease-in-out">
+            <div 
+              key={index} 
+              className="bg-white rounded-xl shadow-lg transition-all duration-300"
+            >
               <div 
                 onClick={() => toggleAnswer(index)} 
-                className="flex justify-between items-center p-4 cursor-pointer hover:bg-yellow-100 transition duration-300"
+                className="flex justify-between items-center p-6 cursor-pointer hover:bg-gray-100 transition duration-300 rounded-lg"
               >
                 <h3 className="text-xl font-semibold text-gray-800">{faq.question}</h3>
-                <span className="text-gray-600 text-lg">
-                  {openIndex === index ? '-' : '+'}
+                <span className="text-gray-600 text-2xl">
+                  {openIndex === index ? <FiChevronUp /> : <FiChevronDown />}
                 </span>
               </div>
               <div 
-                className={`overflow-hidden transition-max-height duration-300 ease-in-out ${openIndex === index ? 'max-h-40' : 'max-h-0'}`}
+                className={`overflow-hidden transition-all duration-300 ease-in-out ${openIndex === index ? 'max-h-48 opacity-100' : 'max-h-0 opacity-0'}`}
               >
-                <div className="p-4 border-t border-gray-200">
-                  <p className="text-gray-600">{faq.answer}</p>
+                <div className="p-6 border-t border-gray-200 text-gray-600">
+                  {faq.answer}
                 </div>
               </div>
             </div>

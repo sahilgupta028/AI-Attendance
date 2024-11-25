@@ -8,6 +8,7 @@ const subjectSchema = new mongoose.Schema({
   totalAbsent: { type: Number, default: 0 },
   Marks: { type: Number, default: 0},
   TotalMarks: { type: Number, default: 0},
+  percentage: { type: Number, default: 0}
 });
 
 const studentSchema = new mongoose.Schema({

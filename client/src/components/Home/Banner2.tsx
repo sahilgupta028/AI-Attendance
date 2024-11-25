@@ -11,16 +11,16 @@ export default function Banner2() {
         alt="Banner Background"
         layout="fill"
         objectFit="cover"
-        quality={100}
+        // quality={100}
         className="rounded-lg"
       />
 
       {/* Text Overlay */}
-      <div className="absolute inset-0 flex flex-col justify-center items-center bg-black bg-opacity-50 text-center text-white">
+      {/* <div className="absolute inset-0 flex flex-col justify-center items-center bg-black bg-opacity-50 text-center text-white">
         <p className="text-lg md:text-4xl mb-6 font-extrabold">
            Stay Present, Honor Your Path.
         </p>
-      </div>
+      </div> */}
     </div>
   );
 }

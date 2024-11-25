@@ -43,7 +43,13 @@ const TeacherAttendance = ({ params }) => {
               const totalClasses = updatedPresent + updatedAbsent;
               const attendancePercentage = totalClasses > 0 ? ((updatedPresent / totalClasses) * 100).toFixed(2) : '0';
 
-              return { ...subj, totalPresent: updatedPresent, totalAbsent: updatedAbsent, lastAttended: currentDate, percentage: attendancePercentage };
+              return {
+                ...subj,
+                totalPresent: updatedPresent,
+                totalAbsent: updatedAbsent,
+                lastAttended: currentDate,
+                percentage: attendancePercentage, // Update the percentage value here
+              };
             }
             return subj;
           });
@@ -91,7 +97,13 @@ const TeacherAttendance = ({ params }) => {
           return `${percentage}%`;
         },
         Cell: ({ cell }) => (
-          <span className={Number(cell.value.replace('%', '')) >= 75 ? 'text-green-600 font-semibold' : 'text-red-600 font-semibold'}>
+          <span
+            className={
+              Number(cell.value.replace('%', '')) >= 75
+                ? 'text-green-600 font-semibold'
+                : 'text-red-600 font-semibold'
+            }
+          >
             {cell.value}
           </span>
         ),

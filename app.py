@@ -10,6 +10,10 @@ import re
 from io import BytesIO
 import pandas as pd
 from datetime import datetime
+import shutil
+import spacy
+
+nlp = spacy.load("en_core_web_sm")
 
 # Initialize FastAPI app
 app = FastAPI()
@@ -90,7 +94,7 @@ async def recognize_face(request: Request):
         best_match_index = np.argmin(face_distances) if matches else None
 
         if matches and best_match_index is not None and matches[best_match_index]:
-            name = classNames[best_match_index].upper()
+            name = classNames[best_match_index]
         
         print(f"Recognition result: {name}")
         return RecognitionResult(name=name)
@@ -98,7 +102,8 @@ async def recognize_face(request: Request):
     except Exception as e:
         print(f"Error processing image: {e}")
         raise HTTPException(status_code=500, detail="Failed to process the uploaded image.")
-    
+
+
 def chatbot_response(query, data):
     """
     Process the chatbot query and return a response based on the user's profile data.
@@ -399,6 +404,31 @@ async def generate_detailed_report_endpoint(request: Request):
     except Exception as e:
         raise HTTPException(status_code=500, detail="Failed to generate the report.")
 
+
+@app.post("/upload")
+async def upload_image(request: Request):
+    try:
+
+        data = await request.json()
+        filename = data.get('fileName')
+
+        print(filename)
+        # Construct the path for the source and destination files
+        source_file_path = os.path.join(UPLOADS_PATH, filename)
+        destination_file_path = os.path.join(TRAINING_IMAGES_PATH, filename)
+
+        # Check if the source file exists in client/uploads
+        if not os.path.isfile(source_file_path):
+            raise HTTPException(status_code=404, detail="File not found in client/uploads.")
+
+        # Copy the file to the Training_images directory
+        shutil.copyfile(source_file_path, destination_file_path)
+
+        return JSONResponse(content={"filename": filename, "message": "File uploaded successfully to Training_images"})
+
+    except Exception as e:
+        print(f"Error uploading image: {e}")
+        raise HTTPException(status_code=500, detail="Failed to upload the image.")
 
 # Run the FastAPI app with the specified port
 if __name__ == "__main__":

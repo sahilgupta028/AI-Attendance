@@ -6,6 +6,7 @@ import { useState, FormEvent } from 'react';
 import Image from 'next/image';
 import toast, { ToastBar, Toaster } from 'react-hot-toast';
 import { useRouter } from 'next/navigation';
+import { verifyEmail } from '@/components/Verification/VerifyEmail';
 
 export default function TeacherRegister() {
   const [name, setName] = useState<string>('');
@@ -19,6 +20,12 @@ export default function TeacherRegister() {
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
+
+    const validity = await verifyEmail(email);
+
+    if(validity == "invalid"){
+      return toast.error("The email address you provided appears to be invalid. Please verify and try again.");
+    }
     
     const response = await fetch('/api/register-teacher', {
       method: 'POST',

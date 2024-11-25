@@ -8,7 +8,7 @@ export default function TeachersPortal() {
     <div className="flex flex-col md:flex-row-reverse max-h-screen">
       {/* Left Section - Text */}
       <div className="flex flex-col justify-center items-start p-10 md:w-1/2 bg-white rounded-lg  m-4 md:m-8 space-y-6">
-        <h1 className="text-5xl font-extrabold text-gray-800 mb-4">Teachers Portal</h1>
+        <h1 className="text-5xl font-extrabold text-black mb-4">Teachers Portal</h1>
         <p className="text-lg text-gray-700 mb-8">
           Manage your classes, track student attendance, and stay connected with your students.
         </p>

@@ -7,6 +7,7 @@ import path from 'path';
 const capitalizeName = (string: string): string => {
   if (!string) return string;
   return string
+    .trim() // Remove any extra spaces at the beginning or end
     .split(' ')
     .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
     .join(' ');
@@ -19,7 +20,7 @@ interface RecognitionResponse {
 export async function POST(req: Request): Promise<Response> {
   try {
 
-    connectMongo();
+    await connectMongo();
     
     // Parse the request body
     const { image }: { image: string } = await req.json();
@@ -62,13 +63,19 @@ export async function POST(req: Request): Promise<Response> {
 
     // Parse backend response
     const result: RecognitionResponse = await response.json();
-    const recognizedName = capitalizeName(result.name) || "Unknown";
 
-    // Search for the student in the database
-    const student = await Student.find({ name: recognizedName });
+    console.log(result);
+
+    const name = capitalizeName(result.name) || "Unknown";
+
+    console.log(name);
+
+    const student = await Student.find({ name: new RegExp(`^${name}$`, 'i') });
+
+    console.log(student);
 
     if (!student) {
-      console.error("Student not found:", recognizedName);
+      console.error("Student not found:", name);
       return new Response(JSON.stringify({ error: "Student not found" }), {
         status: 404,
         headers: { 'Content-Type': 'application/json' },

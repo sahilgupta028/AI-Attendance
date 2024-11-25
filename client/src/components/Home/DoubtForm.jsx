@@ -1,6 +1,7 @@
 // components/DoubtForm.js
 "use client";
 import { useState } from 'react';
+import toast, { Toaster } from 'react-hot-toast';
 
 export default function DoubtForm() {
   const [formData, setFormData] = useState({
@@ -22,28 +23,30 @@ export default function DoubtForm() {
   const handleSubmit = (e) => {
     e.preventDefault();
     setSubmitted(true);
+    toast.success("We will get back to you");
   };
 
   return (
-    <div className="flex flex-col md:flex-row bg-gray-600 rounded-lg shadow-lg p-8 my-8 max-w-4xl mx-auto">
+    <div className="flex flex-col md:flex-row bg-gradient-to-br from-gray-700 via-gray-800 to-gray-900 rounded-lg shadow-2xl p-10 my-12 max-w-5xl mx-auto">
+      <Toaster />
       {/* Left Section - Title & Description */}
-      <div className="flex flex-col justify-center items-start md:w-1/2 p-6 text-white">
-        <h2 className="text-3xl font-bold mb-4">Have a Question?</h2>
-        <p className="text-lg mb-6">
+      <div className="flex flex-col justify-center items-start md:w-1/2 p-8 text-white space-y-4">
+        <h2 className="text-4xl font-extrabold">Have a Question?</h2>
+        <p className="text-lg leading-relaxed">
           Don’t hesitate to ask! Submit your question below, and our team will get back to you as soon as possible.
         </p>
       </div>
 
       {/* Right Section - Form */}
-      <div className="md:w-1/2">
+      <div className="md:w-1/2 mt-8 md:mt-0">
         {submitted ? (
-          <div className="text-center text-white font-semibold">
+          <div className="text-center text-white font-semibold text-xl">
             Thank you for submitting your question! We will get back to you soon.
           </div>
         ) : (
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-6">
             <div>
-              <label htmlFor="name" className="block text-white font-medium mb-1">
+              <label htmlFor="name" className="block text-white font-medium mb-2">
                 Name
               </label>
               <input
@@ -52,13 +55,13 @@ export default function DoubtForm() {
                 name="name"
                 value={formData.name}
                 onChange={handleChange}
-                className="w-full p-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-500"
+                className="w-full p-3 rounded-lg border border-gray-500 bg-gray-800 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                 required
               />
             </div>
 
             <div>
-              <label htmlFor="email" className="block text-white font-medium mb-1">
+              <label htmlFor="email" className="block text-white font-medium mb-2">
                 Email
               </label>
               <input
@@ -67,13 +70,13 @@ export default function DoubtForm() {
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
-                className="w-full p-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-500"
+                className="w-full p-3 rounded-lg border border-gray-500 bg-gray-800 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                 required
               />
             </div>
 
             <div>
-              <label htmlFor="doubt" className="block text-white font-medium mb-1">
+              <label htmlFor="doubt" className="block text-white font-medium mb-2">
                 Your Question
               </label>
               <textarea
@@ -81,14 +84,14 @@ export default function DoubtForm() {
                 name="doubt"
                 value={formData.doubt}
                 onChange={handleChange}
-                className="w-full p-2 h-32 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-500"
+                className="w-full p-3 h-40 rounded-lg border border-gray-500 bg-gray-800 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
                 required
               ></textarea>
             </div>
 
             <button
               type="submit"
-              className="w-full p-3 bg-blue-500 text-white font-semibold rounded-md hover:bg-blue-600 transition duration-300"
+              className="w-full p-3 bg-gradient-to-r from-blue-500 to-purple-500 text-white font-bold rounded-lg hover:from-purple-500 hover:to-blue-500 transition duration-300"
             >
               Submit
             </button>

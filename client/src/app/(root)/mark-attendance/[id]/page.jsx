@@ -1,7 +1,9 @@
 "use client";
 import TeacherAttendance from '@/components/Teacher/MarkAttenadance';
+import AddMarks from '@/components/Teacher/AddMarks';
 import { useSearchParams } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
+
 
 const AttendancePage = ({ params }) => {
   const searchParams = useSearchParams();
@@ -61,6 +63,8 @@ const AttendancePage = ({ params }) => {
 
       {/* Attendance Component */}
       <TeacherAttendance params={params} />
+      <div className='mt-12' />
+      <AddMarks params={params} />
     </div>
   );
 };
