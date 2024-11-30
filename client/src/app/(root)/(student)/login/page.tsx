@@ -1,48 +1,48 @@
 "use client";
 
-import { useEffect, useRef, useState } from 'react';
-import Image from 'next/image';
-import { useRouter } from 'next/navigation';
-import { Toaster, toast } from 'react-hot-toast';
+import { useEffect, useRef, useState } from "react";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { Toaster, toast } from "react-hot-toast";
 
 export default function Login() {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState(null);
-  const [success, setSuccess] = useState(false);
+  const [username, setUsername] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<boolean>(false);
   const router = useRouter();
-  const [isCameraOpen, setIsCameraOpen] = useState(false);
-  const videoRef = useRef(null);
-  const canvasRef = useRef(null);
+  const [isCameraOpen, setIsCameraOpen] = useState<boolean>(false);
+  const videoRef = useRef<HTMLVideoElement | null>(null);
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError(null);
     setSuccess(false);
 
     try {
-      const response = await fetch('/api/login-student', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      const response = await fetch("/api/login-student", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username, password }),
       });
 
       const data = await response.json();
 
       if (response.ok) {
-        toast.success("Login successful!", { position: 'top-center' });
+        toast.success("Login successful!", { position: "top-center" });
         setSuccess(true);
         console.log("User Logged In:", data);
-        localStorage.setItem('isLoggedIn', 'true');
+        localStorage.setItem("isLoggedIn", "true");
         router.push(`/student/attendance/${data.studentId}`);
       } else {
-        toast.error(data.message || 'Login failed', { position: 'top-center' });
-        setError(data.message || 'Login failed');
+        toast.error(data.message || "Login failed", { position: "top-center" });
+        setError(data.message || "Login failed");
       }
     } catch (error) {
       console.error("Login error:", error);
-      toast.error('Server error', { position: 'top-center' });
-      setError('Server error');
+      toast.error("Server error", { position: "top-center" });
+      setError("Server error");
     }
   };
 
@@ -57,42 +57,46 @@ export default function Login() {
 
   const captureImage = () => {
     const canvas = canvasRef.current;
-    const context = canvas.getContext("2d");
-    context.drawImage(videoRef.current, 0, 0, canvas.width, canvas.height);
-    const image = canvas.toDataURL("image/png");
+    const video = videoRef.current;
 
-    fetch("/api/face-authenticate", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ image }),
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Failed to recognize face");
-        }
-        return response.json();
-      })
-      .then((data) => {
-        if (data) {
-          console.log(data);
-          toast.success("Face recognized");
-          setIsCameraOpen(false);
+    if (canvas && video) {
+      const context = canvas.getContext("2d");
+      if (context) {
+        context.drawImage(video, 0, 0, canvas.width, canvas.height);
+        const image = canvas.toDataURL("image/png");
 
-          router.push(`/student/attendance/${data[0]._id}`);
-        } else {
-          toast.error("Face Not recognized");
-        }
-      })
-      .catch((error) => {
-        console.error("Error recognizing face:", error);
-        toast.error("Face Not recognized");
-      })
+        fetch("/api/face-authenticate", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ image }),
+        })
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error("Failed to recognize face");
+            }
+            return response.json();
+          })
+          .then((data) => {
+            if (data) {
+              console.log(data);
+              toast.success("Face recognized");
+              setIsCameraOpen(false);
+              router.push(`/student/attendance/${data[0]._id}`);
+            } else {
+              toast.error("Face Not recognized");
+            }
+          })
+          .catch((error) => {
+            console.error("Error recognizing face:", error);
+            toast.error("Face Not recognized");
+          });
+      }
+    }
   };
-
 
   useEffect(() => {
     return () => {
-      const stream = videoRef.current?.srcObject;
+      const stream = videoRef.current?.srcObject as MediaStream | null;
       if (stream) {
         stream.getTracks().forEach((track) => track.stop());
       }
@@ -120,7 +124,10 @@ export default function Login() {
           <form onSubmit={handleSubmit} className="space-y-6 w-full">
             <h1 className="text-3xl font-bold text-center mb-6">Student Login</h1>
             <div>
-              <label htmlFor="username" className="block text-sm font-medium text-gray-700 mb-1">
+              <label
+                htmlFor="username"
+                className="block text-sm font-medium text-gray-700 mb-1"
+              >
                 Username
               </label>
               <input
@@ -135,7 +142,10 @@ export default function Login() {
             </div>
 
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
+              <label
+                htmlFor="password"
+                className="block text-sm font-medium text-gray-700 mb-1"
+              >
                 Password
               </label>
               <input
@@ -172,7 +182,12 @@ export default function Login() {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
           <div className="bg-white p-4 rounded-lg">
             <video ref={videoRef} autoPlay className="w-full h-auto rounded-md mb-4" />
-            <canvas ref={canvasRef} width={640} height={480} className="hidden"></canvas>
+            <canvas
+              ref={canvasRef}
+              width={640}
+              height={480}
+              className="hidden"
+            ></canvas>
             <button
               onClick={captureImage}
               className="w-full bg-green-500 text-white py-3 rounded-lg font-semibold hover:bg-green-600 transition duration-300"

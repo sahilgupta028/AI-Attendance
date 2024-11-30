@@ -11,7 +11,13 @@ interface Subject {
   TotalMarks: number;
 }
 
-const Report = ({ params }: any) => {
+interface YourReportProps {
+  params: {
+    id: string;
+  };
+}
+
+const Report: React.FC<YourReportProps> = ({ params }) => {
   const [studentDetails, setStudentDetails] = useState<any>(null);
   const [report, setReport] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(false);

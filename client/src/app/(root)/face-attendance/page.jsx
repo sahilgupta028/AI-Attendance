@@ -8,7 +8,7 @@ const capitalizeName = (string) => {
   if (!string) return string;
   return string
     .split(' ')
-    .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()) // Capitalize each word
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
     .join(' ');
 };
 
@@ -32,36 +32,36 @@ export default function Camera({ params }) {
         setTeacherDetails(data);
       } catch (error) {
         console.error("Error fetching teacher details:", error);
+        setErrorMessage("Error fetching teacher details.");
       }
     };
-    
+
     if (id) {
       fetchTeacherDetails();
     }
   }, [id]);
 
   useEffect(() => {
-   const subject = searchParams.get('subject');
-   const classGroup = searchParams.get('classGroup');
+    const subject = searchParams.get('subject');
+    const classGroup = searchParams.get('classGroup');
 
     const fetchTeacherDetails = async () => {
       try {
-        const response = await fetch(`/api/face-attendance?name=${recognizedName}&classGroup=${classGroup}&subject=${subject}`, { method: 'POST'});
-        if (!response.ok) throw new Error('Failed to fetch teacher details');
+        const response = await fetch(`/api/face-attendance?name=${recognizedName}&classGroup=${classGroup}&subject=${subject}`, { method: 'POST' });
+        if (!response.ok) throw new Error('Failed to mark attendance');
         const data = await response.json();
         setTeacherDetails(data);
+        toast.success(`Marked Present for student: ${recognizedName}`);
       } catch (error) {
-        console.error("Error fetching teacher details:", error);
+        console.error("Error marking attendance:", error);
+        setErrorMessage("Error marking attendance.");
       }
     };
-    
+
     if (recognizedName) {
       fetchTeacherDetails();
     }
-
-    toast.success(`Marked Present for student!`);
-
-  }, [ recognizedName ]);
+  }, [recognizedName, searchParams]);
 
   useEffect(() => {
     const startCamera = async () => {
@@ -76,8 +76,8 @@ export default function Camera({ params }) {
 
     startCamera();
 
-    return () => {
-      const stream = videoRef.current.srcObject;
+    return async() => {
+      const stream = await videoRef.current.srcObject;
       if (stream) {
         stream.getTracks().forEach((track) => track.stop());
       }
@@ -120,30 +120,47 @@ export default function Camera({ params }) {
   };
 
   return (
-    <div className="flex flex-col items-center">
+    <div className="flex flex-col items-center justify-center p-4 space-y-4">
       <Toaster position="top-right" reverseOrder={false} />
-      <h1 className="text-2xl font-bold mb-4">Face Recognition</h1>
-      {errorMessage && <p className="text-red-500">{errorMessage}</p>}
-      <video
-        ref={videoRef}
-        autoPlay
-        className="border rounded-md mb-4"
-        width="640"
-        height="480"
-      />
-      <canvas ref={canvasRef} width="640" height="480" className="hidden"></canvas>
+      <h1 className="text-2xl font-bold mb-4 text-center">Face Recognition for Attendance</h1>
+      
+      {/* Error message display */}
+      {errorMessage && <p className="text-red-500 font-semibold">{errorMessage}</p>}
+      
+      {/* Camera Feed */}
+      <div className="relative">
+        <video
+          ref={videoRef}
+          autoPlay
+          className="border rounded-md mb-4 w-full max-w-xl mx-auto"
+          width="640"
+          height="480"
+        />
+        <canvas ref={canvasRef} width="640" height="480" className="hidden"></canvas>
+      </div>
+
+      {/* Capture & Recognize Button */}
       <button
         onClick={captureImage}
-        className={`bg-blue-500 text-white px-4 py-2 rounded-md mb-2 ${
-          loading ? "opacity-50 cursor-not-allowed" : ""
-        }`}
+        className={`bg-blue-500 text-white px-6 py-3 rounded-md mb-2 ${loading ? "opacity-50 cursor-not-allowed" : ""}`}
         disabled={loading}
       >
         {loading ? "Recognizing..." : "Capture & Recognize"}
       </button>
-      <p className="text-xl" aria-live="polite">
-        Recognized Name: {recognizedName}
+
+      {/* Recognized Name */}
+      <p className="text-xl font-semibold text-center" aria-live="polite">
+        Recognized Name: <span className="text-blue-600">{recognizedName}</span>
       </p>
+
+      {/* Teacher details display */}
+      {teacherDetails && (
+        <div className="p-4 bg-gray-100 rounded-md shadow-md mt-4 w-full max-w-xl mx-auto">
+          <h2 className="text-xl font-semibold mb-2">Student Details</h2>
+          <p><strong>Name:</strong> {teacherDetails.name}</p>
+          <p><strong>Email:</strong> {teacherDetails.email}</p>
+        </div>
+      )}
     </div>
   );
 }

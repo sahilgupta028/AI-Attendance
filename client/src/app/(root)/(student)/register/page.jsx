@@ -5,6 +5,7 @@ import Image from 'next/image';
 import Banner from '@/components/Home/Banner';
 import { Toaster, toast } from 'react-hot-toast';
 import { verifyEmail } from '@/components/Verification/VerifyEmail';
+import SlokaPage from '@/components/Home/SlokaPage';
 
 export default function Register() {
   const [name, setName] = useState('');
@@ -72,7 +73,8 @@ export default function Register() {
 
   return (
     <>
-      <Banner />
+      <SlokaPage />
+      
       <div className="flex min-h-screen">
         <div className="hidden md:flex md:w-1/2">
           <div className="relative w-full h-full">

@@ -10,6 +10,12 @@ interface YourReportProps {
   points: string[];
 }
 
+interface YourReportProps {
+  params: {
+    id: string;
+  };
+}
+
 const points = [
   "Understand the basics of the topic to build a strong foundation.",
   "Apply your knowledge to solve real-world problems effectively.",

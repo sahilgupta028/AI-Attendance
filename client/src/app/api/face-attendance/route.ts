@@ -34,6 +34,23 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Student not found or update failed' }, { status: 404 });
     }
 
+    const subject = student.subjects.find((subject: any) => subject.subjectName === subjectName);
+    if (subject) {
+      const totalAbsent = subject.totalAbsent || 0;
+      const totalPresent = subject.totalPresent || 0;
+
+      // If totalAbsent > 0 to avoid division by zero
+      if (totalAbsent > 0) {
+        const percentage = (totalPresent / ( totalPresent + totalAbsent)) * 100;
+
+        // Update the percentage field in the subject object
+        subject.percentage = percentage.toFixed(2);
+
+        // Save the updated student document
+        await student.save();
+      }
+    }
+
     // Log the updated student for debugging
     console.log('Updated Student:', student);
 
