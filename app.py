@@ -106,16 +106,17 @@ async def recognize_face(request: Request):
 
 def chatbot_response(query, data):
     """
-    Process the chatbot query and return a response based on the user's profile data.
+    Process the chatbot query and return a response based on the student's profile data.
     """
     if "email" in query.lower():
         return f"Your email is {data['email']}."
     elif "username" in query.lower():
         return f"Your username is {data['username']}."
     elif "class" in query.lower():
-        return f"the person is in class group {data['classGroup']}."
-
-    subject_match = re.search(r"(attendance|leaves?) in (.+)", query.lower())
+        return f"The person is in class group {data['classGroup']}."
+    
+    # Extract attendance, marks, or leaves query
+    subject_match = re.search(r"(attendance|marks|leaves?) in (.+)", query.lower())
     if subject_match:
         action = subject_match.group(1).strip()
         subject_name = subject_match.group(2).title()
@@ -123,8 +124,10 @@ def chatbot_response(query, data):
         for subject in data['subjects']:
             if subject['subjectName'] == subject_name:
                 if action == "attendance":
-                    return (f"In {subject_name}, You have attended {subject['totalPresent']} classes "
-                            f"and was absent for {subject['totalAbsent']} classes.")
+                    return (f"In {subject_name}, you have attended {subject['totalPresent']} classes "
+                            f"and were absent for {subject['totalAbsent']} classes.")
+                elif action == "marks":
+                    return (f"In {subject_name}, you scored {subject['Marks']} marks out of {subject['TotalMarks']}.")
                 elif action in ["leaves", "leave"]:
                     total_classes = subject['totalPresent'] + subject['totalAbsent']
                     max_allowed_absent = int(total_classes * MAX_ABSENCE_PERCENTAGE)
@@ -135,24 +138,27 @@ def chatbot_response(query, data):
                     else:
                         return f"You have reached the maximum allowable absences in {subject_name}."
     
+    # Total subjects query
     if "total subjects" in query.lower():
         return f"You are enrolled in {len(data['subjects'])} subjects."
+    
+    # List all subjects
     elif "subjects" in query.lower():
         subject_names = ", ".join([subject['subjectName'] for subject in data['subjects']])
         return f"You are studying the following subjects: {subject_names}."
     
     return "I'm sorry, I didn't understand the question. Can you please rephrase?"
-    
+
 @app.post("/chatbot")
 async def chatbot_endpoint(request: Request):
-
+    """
+    Endpoint for chatbot interaction.
+    """
     try:
         # Get the JSON body from the request
         data = await request.json()
 
-        print(data)
-
-        # Access 'query' and 'studentDetails' correctly
+        # Extract query and student details
         query = data.get('query')
         student_details = data.get('studentDetails')
 
@@ -166,7 +172,7 @@ async def chatbot_endpoint(request: Request):
     except Exception as e:
         print(f"Error: {e}")
         raise HTTPException(status_code=500, detail="Error processing the request.")
-    
+
 def generate_detailed_report(student_data):
     subjects = student_data.get('subjects', [])
     report = []

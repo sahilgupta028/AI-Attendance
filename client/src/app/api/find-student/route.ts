@@ -5,6 +5,8 @@ import Student from '@/models/Student';
 
 // Fetch students by id
 export async function GET(req: NextRequest) {
+  connectMongo();
+  
   const url = new URL(req.url);
 
   console.log(url);
