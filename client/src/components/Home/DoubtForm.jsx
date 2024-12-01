@@ -27,7 +27,7 @@ export default function DoubtForm() {
   };
 
   return (
-    <div className="flex flex-col md:flex-row bg-gradient-to-br from-gray-700 via-gray-800 to-gray-900 rounded-lg shadow-2xl p-10 my-12 max-w-5xl mx-auto">
+    <div className="flex flex-col md:flex-row bg-gradient-to-br from-gray-700 via-gray-800 to-gray-900 rounded-lg shadow-2xl p-10 my-12 max-w-5xl mx-auto" id='doubt'>
       <Toaster />
       {/* Left Section - Title & Description */}
       <div className="flex flex-col justify-center items-start md:w-1/2 p-8 text-white space-y-4">

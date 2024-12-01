@@ -5,7 +5,7 @@ import Link from 'next/link';
 
 export default function TeachersPortal() {
   return (
-    <div className="flex flex-col md:flex-row-reverse max-h-screen">
+    <div className="flex flex-col md:flex-row-reverse max-h-screen" id='teacher'>
       {/* Left Section - Text */}
       <div className="flex flex-col justify-center items-start p-10 md:w-1/2 bg-white rounded-lg  m-4 md:m-8 space-y-6">
         <h1 className="text-5xl font-extrabold text-black mb-4">Teachers Portal</h1>

@@ -31,7 +31,7 @@ export default function Navbar() {
         {/* Logo */}
         <div className="flex items-center space-x-2">
           <img src="/logo/logo.png" alt="logo" className="h-10 w-10 rounded-full shadow-md" />
-          <span className="text-2xl font-bold tracking-wide hidden md:block">Attendance Manager</span>
+          <span className="text-2xl font-bold tracking-wide hidden md:block">MarkMentor</span>
         </div>
 
         {/* Mobile Menu Toggle */}

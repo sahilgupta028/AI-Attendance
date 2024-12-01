@@ -1,6 +1,7 @@
 // components/Banner.js
 
 import Image from 'next/image';
+import Link from 'next/link';
 
 export default function Banner() {
   return (
@@ -21,9 +22,11 @@ export default function Banner() {
         <p className="text-lg md:text-2xl mb-6">
           Your gateway to seamless attendance and performance tracking
         </p>
+        <Link href='#teacher'>
         <button className="px-6 py-3 bg-yellow-500 text-white font-semibold rounded-lg shadow-lg hover:bg-yellow-400 transition duration-300">
           Get Started
         </button>
+        </Link>
       </div>
     </div>
   );

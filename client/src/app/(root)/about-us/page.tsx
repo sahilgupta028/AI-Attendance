@@ -109,7 +109,7 @@ export default function AboutUs() {
             <p className="text-gray-600 text-lg max-w-3xl mx-auto mb-8">
               Attendance Manager isn’t just a tool—it’s a platform that fosters growth, rewards dedication, and encourages accountability. Ready to make a difference? Contact us today!
             </p>
-            <a href="/contact" className="px-8 py-4 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition duration-200">
+            <a href="/#doubt" className="px-8 py-4 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition duration-200">
               Contact Us
             </a>
           </section>

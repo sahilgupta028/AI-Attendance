@@ -24,7 +24,7 @@ export default function StudentPortal() {
       </div>
 
       {/* Right Section - Image */}
-      <div className="relative w-screen md:w-1/2 h-52 md:h-auto overflow-hidden rounded-lg m-1 md:m-8">
+      <div className="relative md:w-1/2 h-52 md:h-auto overflow-hidden rounded-lg m-1 md:m-8">
         <Image
           src="/student.jpg" // Replace with your actual image path
           alt="Student Authentication"
