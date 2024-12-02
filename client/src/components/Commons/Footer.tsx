@@ -35,7 +35,7 @@ export default function Footer() {
             </button>
             <button
               className="hover:text-yellow-200 transition duration-300"
-              onClick={() => router.push("/")}
+              onClick={() => router.push("/#doubt")}
             >
               Support
             </button>
