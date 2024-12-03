@@ -97,6 +97,8 @@ async def recognize_face(request: Request):
             name = classNames[best_match_index]
         
         print(f"Recognition result: {name}")
+        # Remove the temp file that is saved locally 
+        os.removedirs(upload_file_path)
         return RecognitionResult(name=name)
 
     except Exception as e:
