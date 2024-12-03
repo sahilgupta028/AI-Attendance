@@ -13,6 +13,11 @@ export async function POST(req: Request) {
 
     console.log("MongoDB Connected");
 
+    const existingClass = await Teacher.findOne({ subject, classGroup });
+    if (existingClass) {
+      return NextResponse.json({ message: 'Teacher already exists with this subject and class' }, { status: 400 });
+    }
+
     // Check if the teacher already exists
     const existingTeacher = await Teacher.findOne({ email });
     if (existingTeacher) {

@@ -19,20 +19,29 @@ export default function TeacherRegister() {
       return toast.error("Please enter your email.");
     }
 
-    const response = await fetch("/api/send-otp", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email }),
-    });
+    toast.loading("Loading");
 
-    const text = await response.json(); // Get the raw response text
-    console.log("Response Text:", text);
+    try {
+      const response = await fetch("/api/send-otp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
 
-    if (response.ok) {
-      setOtpSent(true);
-      toast.success("OTP sent to your email!");
-    } else {
-      toast.error(text || "Failed to send OTP.");
+      const data = await response.json();
+
+      if (response.ok) {
+        setOtpSent(true);
+
+        toast.dismiss();
+        toast.success("OTP sent to your email!");
+      } else {
+        toast.dismiss();
+        toast.error(data.message || "Failed to send OTP.");
+      }
+    } catch (error) {
+      toast.dismiss();
+      toast.error("Something went wrong. Please try again.");
     }
   };
 
@@ -41,19 +50,28 @@ export default function TeacherRegister() {
       return toast.error("Please enter the OTP.");
     }
 
-    const response = await fetch("/api/verify-otp", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, otp }),
-    });
+    toast.loading("Loading");
 
-    const data = await response.json();
+    try {
+      const response = await fetch("/api/verify-otp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, otp }),
+      });
 
-    if (response.ok) {
-      setEmailVerified(true);
-      toast.success("Email verified successfully!");
-    } else {
-      toast.error(data.message || "Invalid OTP.");
+      const data = await response.json();
+
+      if (response.ok) {
+        setEmailVerified(true);
+        toast.dismiss();
+        toast.success("Email verified successfully!");
+      } else {
+        toast.dismiss();
+        toast.error(data.message || "Invalid OTP.");
+      }
+    } catch (error) {
+      toast.dismiss();
+      toast.error("Something went wrong. Please try again.");
     }
   };
 
@@ -64,20 +82,27 @@ export default function TeacherRegister() {
       return toast.error("Please verify your email before registration.");
     }
 
-    const response = await fetch("/api/register-teacher", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name, subject, email, classGroup, password }),
-    });
+    toast.loading("Loading");
 
-    const data = await response.json();
+    try {
+      const response = await fetch("/api/register-teacher", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, subject, email, classGroup, password }),
+      });
 
-    console.log(data);
+      const data = await response.json();
 
-    if (response.ok) {
-      toast.success(`Registration successful! Your id: ${data.id}`);
-    } else {
-      toast.error(data.message || "Failed to register.");
+      if (response.ok) {
+        toast.dismiss();
+        toast.success(`Registration successful! Your ID: ${data.id}`);
+      } else {
+        toast.dismiss();
+        toast.error(data.message || "Failed to register.");
+      }
+    } catch (error) {
+      toast.dismiss();
+      toast.error("Something went wrong. Please try again.");
     }
   };
 
@@ -176,9 +201,14 @@ export default function TeacherRegister() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500"
+              disabled={emailVerified}
+              className={`w-full p-3 border rounded-lg focus:ring-2 ${
+                emailVerified
+                  ? "bg-gray-100 cursor-not-allowed border-gray-300"
+                  : "border-gray-300 focus:ring-yellow-500"
+              }`}
             />
-            {!otpSent && (
+            {!otpSent && !emailVerified && (
               <button
                 type="button"
                 onClick={handleSendOtp}
@@ -186,6 +216,11 @@ export default function TeacherRegister() {
               >
                 Send OTP
               </button>
+            )}
+            {emailVerified && (
+              <p className="text-green-500 text-sm mt-2">
+                Email verified successfully! You cannot change it now.
+              </p>
             )}
           </div>
 

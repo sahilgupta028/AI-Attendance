@@ -21,6 +21,11 @@ export async function POST(req: Request) {
     await connectMongo();
     console.log("MongoDB Connected");
 
+    const existingName = await Student.findOne({ name });
+    if (existingName) {
+      return NextResponse.json({ message: 'Student already registered with this name' }, { status: 400 });
+    }
+
     const existingStudent = await Student.findOne({ email });
     if (existingStudent) {
       return NextResponse.json({ message: 'Student already registered' }, { status: 400 });

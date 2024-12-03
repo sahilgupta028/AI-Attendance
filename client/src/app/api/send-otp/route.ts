@@ -15,6 +15,7 @@ export async function POST(req: Request) {
 
   // Generate a 6-digit OTP
   const otp = Math.floor(100000 + Math.random() * 900000).toString();
+  
   setOtp(email, otp);
 
   // Create a transporter for sending emails
