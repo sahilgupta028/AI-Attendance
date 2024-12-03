@@ -1,44 +1,47 @@
-// app/api/send-email/route.ts
-import { NextRequest, NextResponse } from 'next/server';
-import { Resend } from 'resend';
+import { NextResponse } from 'next/server';
+import nodemailer from 'nodemailer';
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+type Student = {
+    name: string;
+    email: string;
+};
 
-export async function POST(req: NextRequest) {
-  try {
-    // Parse the incoming request body
-    const { students }: { students: { name: string; email: string }[] } = await req.json();
+export async function POST(req: Request) {
+    try {
+        const { lowAttendanceStudents }: { lowAttendanceStudents: Student[] } = await req.json();
 
-    const print = resend.domains.list();
-
-    console.log("Domain :" ,print);
-
-    // Send emails to each student
-    await Promise.all(
-      students.map(async (student) => {
-        const { name, email } = student; // Destructure student details
-
-        // Sending the email
-        const { data, error } = await resend.emails.send({
-          from: 'onboarding@resend.dev', // Your verified sender email
-          to: [email], // Send to the student's email
-          subject: 'Attendance Notification',
-          html: `<p>Dear ${name},</p><p>Your attendance percentage is below 75%. Please ensure to attend classes regularly.</p>`, // Personalize the email
-        });
-
-        // Handle any errors in sending the email
-        if (error) {
-          console.error(`Error sending email to ${name}:`, error);
-          throw new Error(`Failed to send email to ${name}`);
+        if (!lowAttendanceStudents || !Array.isArray(lowAttendanceStudents)) {
+            return NextResponse.json({ error: 'Invalid request body' }, { status: 400 });
         }
 
-        console.log(`Email sent to ${name}:`, data); // Log success for each email sent
-      })
-    );
+        // Configure the transporter
+        const transporter = nodemailer.createTransport({
+            service: 'gmail', // Replace with your email service provider
+            auth: {
+                user: 'sahil7e55gupta@gmail.com', // Your email address
+                pass: 'lqev gytf fgmi arlg', // Your email password or app-specific password
+            },
+        });
 
-    return NextResponse.json({ message: 'Emails sent successfully!' });
-  } catch (error) {
-    console.error('Error sending emails:', error);
-    return NextResponse.json({ error: 'Failed to send emails' }, { status: 500 });
-  }
+        // Send emails to all low-attendance students
+        await Promise.all(
+            lowAttendanceStudents.map(async (student: Student) => {
+                const { name, email } = student;
+
+                const mailOptions = {
+                    from: 'sahil7e55gupta@gmail.com',
+                    to: email,
+                    subject: 'Low Attendance Alert',
+                    text: `Dear ${name}, your attendance percentage is below 75%. Please ensure to attend classes regularly.`,
+                };
+
+                await transporter.sendMail(mailOptions);
+            })
+        );
+
+        return NextResponse.json({ message: 'Emails sent successfully!' });
+    } catch (error) {
+        console.error('Error sending emails:', error);
+        return NextResponse.json({ error: 'Failed to send emails' }, { status: 500 });
+    }
 }

@@ -12,7 +12,53 @@ export default function Register() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [classGroup, setClassGroup] = useState('');
-  const [profilePhoto, setProfilePhoto] = useState(null); // State for profile photo
+  const [profilePhoto, setProfilePhoto] = useState(null);
+  const [otp, setOtp] = useState("");
+  const [otpSent, setOtpSent] = useState(false);
+  const [emailVerified, setEmailVerified] = useState(false);
+
+  const handleSendOtp = async () => {
+    if (!email) {
+      return toast.error("Please enter your email.");
+    }
+
+    const response = await fetch("/api/send-otp", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email }),
+    });
+
+    const text = await response.json(); // Get the raw response text
+    console.log("Response Text:", text);
+
+    if (response.ok) {
+      setOtpSent(true);
+      toast.success("OTP sent to your email!");
+    } else {
+      toast.error(text || "Failed to send OTP.");
+    }
+  };
+
+  const handleVerifyOtp = async () => {
+    if (!otp) {
+      return toast.error("Please enter the OTP.");
+    }
+
+    const response = await fetch("/api/verify-otp", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, otp }),
+    });
+
+    const data = await response.json();
+
+    if (response.ok) {
+      setEmailVerified(true);
+      toast.success("Email verified successfully!");
+    } else {
+      toast.error(data.message || "Invalid OTP.");
+    }
+  };
 
   const handlePhotoChange = (e) => {
     setProfilePhoto(e.target.files[0]);
@@ -20,6 +66,10 @@ export default function Register() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!emailVerified) {
+      return toast.error("Please verify your email before registration.");
+    }
 
     const formData = new FormData();
     formData.append('name', name);
@@ -73,7 +123,6 @@ export default function Register() {
 
   return (
     <>
-      <SlokaPage />
       
       <div className="flex min-h-screen">
         <div className="hidden md:flex md:w-1/2">
@@ -121,19 +170,50 @@ export default function Register() {
             </div>
 
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
-                Email
+            <label htmlFor="email" className="block text-sm font-medium mb-1">
+              Email
+            </label>
+            <input
+              type="email"
+              id="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500"
+            />
+            {!otpSent && (
+              <button
+                type="button"
+                onClick={handleSendOtp}
+                className="mt-2 px-4 py-2 bg-yellow-500 text-white rounded-lg"
+              >
+                Send OTP
+              </button>
+            )}
+          </div>
+
+          {/* OTP */}
+          {otpSent && !emailVerified && (
+            <div>
+              <label htmlFor="otp" className="block text-sm font-medium mb-1">
+                OTP
               </label>
               <input
-                type="email"
-                id="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
+                type="text"
+                id="otp"
+                value={otp}
+                onChange={(e) => setOtp(e.target.value)}
                 className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500"
-                placeholder="Enter your email address"
               />
+              <button
+                type="button"
+                onClick={handleVerifyOtp}
+                className="mt-2 px-4 py-2 bg-yellow-500 text-white rounded-lg"
+              >
+                Verify OTP
+              </button>
             </div>
+          )}
 
             <div>
               <label htmlFor="classGroup" className="block text-sm font-medium text-gray-700 mb-1">

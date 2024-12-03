@@ -1,8 +1,7 @@
 "use client";
 import { useRouter, useSearchParams } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
-import { toast } from 'react-hot-toast'; 
-import emailjs from '@emailjs/browser';
+import { toast } from 'react-hot-toast';
 
 const Buttons = ({ params, lowAttendanceStudents }) => {
     const router = useRouter();
@@ -29,43 +28,39 @@ const Buttons = ({ params, lowAttendanceStudents }) => {
     }, [id]);
 
     const sendEmails = async () => {
-
         toast.loading("Loading");
 
         try {
-            // Send emails to each student with low attendance
-            await Promise.all(lowAttendanceStudents.map(async (student) => {
-                const { name, email } = student; // Assuming student has name and email fields
+            // Send the lowAttendanceStudents data to the backend
+            const response = await fetch('/api/send-Mail', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ lowAttendanceStudents }),
+            });
 
-                console.log(name, email);
-
-                await emailjs.send(
-                    process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID,
-                    process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID,
-                    {
-                        from_name: name,
-                        to_name: "Attendance Manager",
-                        from_email: email,
-                        to_email: "sahilgupta11543@gmail.com",
-                        message: `Dear ${name}, your attendance percentage is below 75%. Please ensure to attend classes regularly.`,
-                    },
-                    process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY
-                );
-            }));
+            if (!response.ok) {
+                throw new Error('Failed to send emails');
+            }
 
             toast.dismiss();
-
-            toast.success("Emails sent successfully! 😃"); // Success toast
+            toast.success("Emails sent successfully! 😃");
         } catch (error) {
-            console.error('EmailJS error:', error);
-            toast.error("Something went wrong. Please try again."); // Error toast
+            console.error('Error sending emails:', error);
+            toast.dismiss();
+            toast.error("Something went wrong. Please try again.");
         }
     };
 
     return (
         <div className="flex justify-center space-x-4 p-6">
             <button
-                onClick={() => router.push(`/face-attendance?id=${id}&classGroup=${teacherDetails?.classGroup}&subject=${teacherDetails?.subject}`)}
+                onClick={() =>
+                    router.push(
+                        `/face-attendance?id=${id}&classGroup=${teacherDetails?.classGroup}&subject=${teacherDetails?.subject}`
+                    )
+                }
                 className="px-6 py-3 bg-gradient-to-r from-blue-400 to-blue-600 text-white font-semibold rounded-lg shadow-lg hover:from-blue-500 hover:to-blue-700 transition duration-300 ease-in-out"
             >
                 Mark Attendance by Face
