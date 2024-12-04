@@ -18,8 +18,8 @@ export async function POST(req: Request) {
         const transporter = nodemailer.createTransport({
             service: 'gmail', // Replace with your email service provider
             auth: {
-                user: 'sahil7e55gupta@gmail.com', // Your email address
-                pass: 'lqev gytf fgmi arlg', // Your email password or app-specific password
+                user: process.env.NEXT_PUBLIC_NODEMAILER_USER, // Your email address
+                pass: process.env.NEXT_PUBLIC_NODEMAILER_PASS, // Your email password or app-specific password
             },
         });
 
@@ -31,9 +31,20 @@ export async function POST(req: Request) {
                 const mailOptions = {
                     from: 'sahil7e55gupta@gmail.com',
                     to: email,
-                    subject: 'Low Attendance Alert',
-                    text: `Dear ${name}, your attendance percentage is below 75%. Please ensure to attend classes regularly.`,
+                    subject: 'Important Notice: Low Attendance Alert',
+                    text: `Dear ${name},
+We hope this message finds you well. We are reaching out to inform you that your current attendance percentage has fallen below the required threshold of 75%. Regular attendance is essential to ensure your academic success and maintain a consistent learning experience.
+                
+We encourage you to prioritize attending classes moving forward. Consistent participation will help you stay updated with the course material, engage effectively with your peers, and clarify any doubts in real-time.
+                
+If there are any challenges preventing you from attending classes, please do not hesitate to contact us. We are here to support you and help you overcome any difficulties.
+                
+Thank you for your attention to this matter. We are confident that with regular attendance, you can achieve your academic goals.
+                
+Best regards,
+College Management`,
                 };
+                
 
                 await transporter.sendMail(mailOptions);
             })

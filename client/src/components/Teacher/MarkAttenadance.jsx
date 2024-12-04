@@ -73,7 +73,7 @@ const TeacherAttendance = ({ params }) => {
   const columns = React.useMemo(
     () => [
       { Header: 'Name', accessor: 'name' },
-      { Header: 'Email', accessor: 'email' },
+      // { Header: 'Email', accessor: 'email' },
       {
         Header: 'Total Present',
         accessor: (row) => row.subjects.find((subj) => subj.subjectName === subject)?.totalPresent || 0,

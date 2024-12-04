@@ -32,9 +32,23 @@ export async function POST(req: Request) {
     await transporter.sendMail({
       from: 'sahil7e55gupta@gmail.com',
       to: email,
-      subject: 'Your OTP for Verification',
-      text: `Your OTP is: ${otp}`,
-    });
+      subject: 'Verification OTP for Your Account',
+      text: `Dear User,
+  
+  We have received a request to verify your account. To complete the verification process, please use the One-Time Password (OTP) provided below:
+  
+  Your OTP: ${otp}
+  
+  This OTP is valid for the next 5 minutes. Please do not share this code with anyone to ensure the security of your account.
+  
+  If you did not initiate this request, please disregard this email or contact our support team immediately for assistance.
+  
+  Thank you for choosing our service!
+  
+  Best regards,  
+  College Management`,
+  });
+  
 
     return NextResponse.json({ message: 'Email sent successfully' }, { status: 200 });
   } catch (error) {
