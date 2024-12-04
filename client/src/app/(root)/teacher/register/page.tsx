@@ -3,6 +3,7 @@
 import { useState, FormEvent } from "react";
 import Image from "next/image";
 import toast, { Toaster } from "react-hot-toast";
+import { useRouter } from "next/navigation";
 
 export default function TeacherRegister() {
   const [name, setName] = useState<string>("");
@@ -13,6 +14,8 @@ export default function TeacherRegister() {
   const [otp, setOtp] = useState<string>("");
   const [otpSent, setOtpSent] = useState<boolean>(false);
   const [emailVerified, setEmailVerified] = useState<boolean>(false);
+
+  const router = useRouter();
 
   const handleSendOtp = async () => {
     if (!email) {
@@ -96,6 +99,8 @@ export default function TeacherRegister() {
       if (response.ok) {
         toast.dismiss();
         toast.success(`Registration successful! Your ID: ${data.id}`);
+
+        router.push(`/student/attendance/${data[0]._id}`);
       } else {
         toast.dismiss();
         toast.error(data.message || "Failed to register.");
