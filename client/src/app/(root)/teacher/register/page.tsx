@@ -98,9 +98,8 @@ export default function TeacherRegister() {
 
       if (response.ok) {
         toast.dismiss();
-        toast.success(`Registration successful! Your ID: ${data.id}`);
-
-        router.push(`/student/attendance/${data[0]._id}`);
+        toast.success(`Registration successful! Your ID: ${data.id}.`);
+        toast.success("Login Again");
       } else {
         toast.dismiss();
         toast.error(data.message || "Failed to register.");

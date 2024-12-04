@@ -101,6 +101,8 @@ export default function Register() {
           toast.success(`Registration successful! Your username is ${data.username}`, {
             position: "top-center",
           });
+
+          toast.success("Login Again");
         } else {
           toast.error(data.message || "Registration failed", {
             position: "top-center",
