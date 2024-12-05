@@ -79,10 +79,10 @@ const AddMarks = () => {
         Header: "Name",
         accessor: "name",
       },
-      {
-        Header: "Email",
-        accessor: "email",
-      },
+      // {
+      //   Header: "Email",
+      //   accessor: "email",
+      // },
       {
         Header: "Marks",
         Cell: ({ row }) => {

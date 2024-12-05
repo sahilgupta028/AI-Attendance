@@ -35,18 +35,18 @@ export async function POST(req: Request) {
       subject: 'Verification OTP for Your Account',
       text: `Dear User,
   
-  We have received a request to verify your account. To complete the verification process, please use the One-Time Password (OTP) provided below:
+We have received a request to verify your account. To complete the verification process, please use the One-Time Password (OTP) provided below:
   
-  Your OTP: ${otp}
+Your OTP: ${otp}
   
-  This OTP is valid for the next 5 minutes. Please do not share this code with anyone to ensure the security of your account.
+This OTP is valid for the next 5 minutes. Please do not share this code with anyone to ensure the security of your account.
   
-  If you did not initiate this request, please disregard this email or contact our support team immediately for assistance.
+If you did not initiate this request, please disregard this email or contact our support team immediately for assistance.
   
-  Thank you for choosing our service!
+Thank you for choosing our service!
   
-  Best regards,  
-  College Management`,
+Best regards,  
+College Management`,
   });
   
 

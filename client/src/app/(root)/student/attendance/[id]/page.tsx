@@ -104,8 +104,6 @@ const Page: React.FC<Params> = ({ params }) => {
       </div>
 
       <YourReport params={params} />
-
-      <SlokaPage />
     </div>
   );
 };
