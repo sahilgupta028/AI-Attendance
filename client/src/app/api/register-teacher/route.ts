@@ -5,6 +5,14 @@ import { v4 as uuidv4 } from 'uuid'; // Import UUID
 import connectMongo from '../../../lib/mongodb';
 import Teacher from '../../../models/Teacher';
 
+const capitalizeName = (string: string): string => {
+  if (!string) return string;
+  return string
+    .split(' ')
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+    .join(' ');
+};
+
 export async function POST(req: Request) {
   const { name, subject, classGroup, email, password } = await req.json();
 
@@ -30,10 +38,12 @@ export async function POST(req: Request) {
     const randomSuffix = Math.floor(1000 + Math.random() * 9000); // Generate a 4-digit random number
     const id = `${name.replace(/\s+/g, '').toLowerCase()}${randomSuffix}`;
 
+    const pname = capitalizeName(name);
+
     // Create a new teacher document with a unique teacherId
     const teacher = new Teacher({
       teacherId: id,
-      name,
+      name: pname,
       subject,
       classGroup,
       email,
