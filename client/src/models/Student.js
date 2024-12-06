@@ -2,13 +2,22 @@
 
 import mongoose from 'mongoose';
 
+
+const dateschema = new mongoose.Schema({
+  date: { type: String, required: true },
+  status: { type: String, enum: ['present', 'absent'], required: true }
+});
+
 const subjectSchema = new mongoose.Schema({
   subjectName: { type: String, required: true },
   totalPresent: { type: Number, default: 0 },
   totalAbsent: { type: Number, default: 0 },
   Marks: { type: Number, default: 0},
   TotalMarks: { type: Number, default: 0},
-  percentage: { type: Number, default: 0}
+  percentage: { type: Number, default: 0},
+  Date: {
+    type: [dateschema],
+  }
 });
 
 const studentSchema = new mongoose.Schema({

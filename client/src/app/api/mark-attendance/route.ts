@@ -13,13 +13,30 @@ export async function POST(req: NextRequest) {
 
     const updateField = status === 'present' ? 'totalPresent' : 'totalAbsent';
 
+    const currentDate = new Date();
+    const options = {
+      timeZone: 'America/New_York', // US Eastern Time
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+    };
+    const formattedDate = new Intl.DateTimeFormat('en-US', options).format(currentDate);
+
     try {
       // Fetch the student and update attendance
       const student = await Student.findOneAndUpdate(
         { _id: new ObjectId(id), "subjects.subjectName": subjectName },
-        { $inc: { [`subjects.$.${updateField}`]: 1 } },
+        {
+            $inc: { [`subjects.$.${updateField}`]: 1 },
+            $push: { 
+                "subjects.$.Date": {
+                    date: formattedDate,
+                    status: status
+                }
+            }
+        },
         { new: true } // Return the updated document
-      );
+    );
 
       if (!student) {
         return NextResponse.json({ error: 'Student not found or update failed' }, { status: 404 });

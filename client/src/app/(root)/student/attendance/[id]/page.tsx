@@ -59,6 +59,50 @@ const Page: React.FC<Params> = ({ params }) => {
         </div>
       </div>
 
+      <div className="flex flex-col md:flex-row-reverse items-center p-8 mt-4 bg-gradient-to-r from-blue-50 via-white to-blue-50 rounded-lg shadow-xl mx-6">
+  {/* Left Section with Heading and Points */}
+  <div className="w-full md:w-1/2 space-y-6">
+    <h2 className="text-2xl font-semibold text-gray-800">View Your Attendance Date Wise</h2>
+
+    {/* Points Section */}
+    <div className="space-y-4 text-gray-700 text-lg">
+      <div className="flex items-start space-x-3">
+        <span className="text-lg">📅</span>
+        <p className="leading-relaxed">View your attendance on specific dates.</p>
+      </div>
+      <div className="flex items-start space-x-3">
+        <span className="text-lg">🗓️</span>
+        <p className="leading-relaxed">Get detailed information about each class attended.</p>
+      </div>
+      <div className="flex items-start space-x-3">
+        <span className="text-lg">🔍</span>
+        <p className="leading-relaxed">Filter attendance by date range for better tracking.</p>
+      </div>
+    </div>
+
+    <div className="mt-4 flex items-center justify-center text-center">
+      <button
+        onClick={() => router.push(`/student/attend-date-wise/${params.id}`)}
+        className="px-6 py-3 bg-blue-600 text-white hover:bg-blue-700 rounded-xl shadow-md focus:outline-none transition duration-150 ease-in-out"
+      >
+        See Attendance Date Wise
+      </button>
+    </div>
+  </div>
+
+  {/* Right Section with Image */}
+  <div className="w-full md:w-1/2 flex-shrink-0 mt-6 md:mt-0">
+    <Image
+      src="/attendance-date.jpg" // Replace with the actual image path
+      alt="Attendance Illustration"
+      width={500}
+      height={500}
+      className="rounded-lg object-cover shadow-lg"
+    />
+  </div>
+</div>
+
+
       {/* Chatbot Section */}
       <div className="flex flex-col md:flex-row items-center p-8 mt-4 bg-gradient-to-r from-blue-50 via-white to-blue-50 rounded-lg shadow-xl mx-6">
         {/* Left Section with Heading and Points */}

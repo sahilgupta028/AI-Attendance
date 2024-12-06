@@ -1,5 +1,5 @@
 "use client";
-import { useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 import { useTable } from 'react-table';
 import toast, { Toaster } from 'react-hot-toast';
@@ -10,6 +10,8 @@ const TeacherAttendance = ({ params }) => {
   const searchParams = useSearchParams();
   const subject = searchParams.get('subject');
   const classGroup = searchParams.get('classGroup');
+
+  const router = useRouter();
 
   // Fetch students from the backend
   useEffect(() => {
@@ -123,6 +125,12 @@ const TeacherAttendance = ({ params }) => {
               className="px-4 py-2 bg-gradient-to-r from-red-400 to-red-600 text-white font-semibold rounded-md hover:from-red-500 hover:to-red-700 transition"
             >
               Absent
+            </button>
+            <button
+              onClick={() => router.push(`/detailed-report/${row._id}?subject=${subject}&clssGroup=${classGroup}`)}
+              className="px-4 py-2 bg-gradient-to-r from-orange-400 to-orange-600 text-white font-semibold rounded-md hover:from-orange-500 hover:to-orange-700 transition"
+            >
+              Report
             </button>
           </div>
         ),
