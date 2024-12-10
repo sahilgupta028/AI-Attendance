@@ -2,7 +2,8 @@ import { setOtp } from '@/utils/otpStore';
 import { NextResponse } from 'next/server';
 import nodemailer from 'nodemailer';
 
-let otpStore: { [key: string]: string } = {}; // Temporary in-memory store for OTPs
+import { getRedisClient} from '@/lib/redis';
+
 
 export async function POST(req: Request) {
   const { email } = await req.json();
@@ -16,7 +17,12 @@ export async function POST(req: Request) {
   // Generate a 6-digit OTP
   const otp = Math.floor(100000 + Math.random() * 900000).toString();
   
-  setOtp(email, otp);
+  // setOtp(email, otp);
+
+  const client = await getRedisClient();
+
+    // Store OTP with an expiry time of 5 minutes
+    await client.set(email, otp, { EX: 300 });
 
   // Create a transporter for sending emails
   const transporter = nodemailer.createTransport({
