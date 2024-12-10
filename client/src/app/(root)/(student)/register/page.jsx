@@ -68,6 +68,35 @@ export default function Register() {
     setProfilePhoto(e.target.files[0]);
   };
 
+  const sendEmails = async (email, username ) => {
+    toast.loading("Loading");
+
+    console.log(username)
+    console.log(email)
+
+    try {
+        // Send the lowAttendanceStudents data to the backend
+        const response = await fetch('/api/send-username', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ email, username }),
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to send emails');
+        }
+
+        toast.dismiss();
+        toast.success("Emails sent successfully! 😃");
+    } catch (error) {
+        console.error('Error sending emails:', error);
+        toast.dismiss();
+        toast.error("Something went wrong. Please try again.");
+    }
+};
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -101,6 +130,8 @@ export default function Register() {
           toast.success(`Registration successful! Your username is ${data.username}`, {
             position: "top-center",
           });
+
+          await sendEmails(email, data.username);
 
           toast.success("Login Again");
         } else {

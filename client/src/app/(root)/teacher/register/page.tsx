@@ -17,6 +17,35 @@ export default function TeacherRegister() {
 
   const router = useRouter();
 
+  const sendEmails = async (email: string, username: string ) => {
+    toast.loading("Loading");
+
+    console.log(username)
+    console.log(email)
+
+    try {
+        // Send the lowAttendanceStudents data to the backend
+        const response = await fetch('/api/send-username', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ email, username }),
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to send emails');
+        }
+
+        toast.dismiss();
+        toast.success("Username sent successfully!");
+    } catch (error) {
+        console.error('Error sending emails:', error);
+        toast.dismiss();
+        toast.error("Something went wrong. Please try again.");
+    }
+};
+
   const handleSendOtp = async () => {
     if (!email) {
       return toast.error("Please enter your email.");
@@ -99,6 +128,8 @@ export default function TeacherRegister() {
       if (response.ok) {
         toast.dismiss();
         toast.success(`Registration successful! Your ID: ${data.id}.`);
+
+        await sendEmails(email, data.id);
         toast.success("Login Again");
       } else {
         toast.dismiss();
