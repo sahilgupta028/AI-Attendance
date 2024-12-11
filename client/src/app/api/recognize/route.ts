@@ -53,6 +53,8 @@ export async function POST(req: Request) {
         const result = await response.json();
         const recognizedName = result.name || "Unknown";
 
+        await fs.unlink(filePath);
+
         // Return recognized name to frontend
         return new Response(JSON.stringify({ name: recognizedName }), {
             status: 200,

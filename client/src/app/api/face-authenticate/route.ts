@@ -84,6 +84,8 @@ export async function POST(req: Request): Promise<Response> {
 
     console.log("Recognized student:", student);
 
+    await fs.unlink(filePath);
+
     // Return the student data to the frontend
     return NextResponse.json(student, { status: 200 });
   } catch (error) {
